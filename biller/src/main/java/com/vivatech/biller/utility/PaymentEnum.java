@@ -3,7 +3,7 @@ package com.vivatech.biller.utility;
 public class PaymentEnum {
 
     public enum ResponseStatus {
-        SUCCESS, FAILED
+        SUCCESS, STARTED, FAILED
     }
 
     public enum BillerName {

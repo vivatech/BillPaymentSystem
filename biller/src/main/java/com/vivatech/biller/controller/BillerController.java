@@ -19,7 +19,7 @@ public class BillerController {
     private BillerRepository billerRepository;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public Response createBiller(@RequestBody Biller biller){
+    public Response createBiller(@RequestBody Biller biller) {
         Biller existingBiller = billerRepository.findByBillerName(biller.getBillerName());
         if (existingBiller != null) throw new PaymentAppException("Biller already exist.");
         Biller newBiller = new Biller();
