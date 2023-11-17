@@ -1,7 +1,7 @@
 package com.vivatech.biller.apiprocessor;
 
 import com.vivatech.biller.dto.BillPaymentResponse;
-import com.vivatech.biller.dto.PaymentResponse;
+import com.vivatech.biller.dto.DueBillResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class BillerApiProcessor {
         return null;
     }
 
-    public PaymentResponse getDueBill(String regNo, String billerName){
+    public DueBillResponse getDueBill(String regNo, String billerName){
         BillerInterface matchedProcessor = getMatchedProcessor(billerName);
         return matchedProcessor.getBillDetail(regNo);
     }

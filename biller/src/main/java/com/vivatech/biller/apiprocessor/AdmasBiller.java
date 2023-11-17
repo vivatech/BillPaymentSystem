@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vivatech.biller.apiprocessor.admasdto.*;
 import com.vivatech.biller.dto.BillPaymentResponse;
 import com.vivatech.biller.dto.CustomerDto;
-import com.vivatech.biller.dto.PaymentResponse;
+import com.vivatech.biller.dto.DueBillResponse;
 import com.vivatech.biller.exception.PaymentAppException;
 import com.vivatech.biller.model.BillerTransaction;
 import com.vivatech.biller.repository.BillerRepository;
@@ -51,8 +51,8 @@ public class AdmasBiller implements BillerInterface{
     }
 
     @Override
-    public PaymentResponse getBillDetail(String registrationNo) {
-        PaymentResponse paymentResponse = new PaymentResponse();
+    public DueBillResponse getBillDetail(String registrationNo) {
+        DueBillResponse dueBillResponse = new DueBillResponse();
         log.info("posting request to admas university for due payment of student id: {}", registrationNo);
         try {
             String url = endpoint + "payment/get-payment-detail-by-fee-type";
@@ -71,15 +71,15 @@ public class AdmasBiller implements BillerInterface{
             log.info("bill query request for admas university student id {} is {}", registrationNo, objectMapper.writeValueAsString(resBody));
             AdmasBillerResponse admasBillerResponse = objectMapper.readValue(resBody, AdmasBillerResponse.class);
             CustomerDto customerDto = new CustomerDto();
-            customerDto.setId(admasBillerResponse.getStudentDto().getId());
+            customerDto.setId(admasBillerResponse.getStudentDto().getRegistrationNo());
             customerDto.setName(admasBillerResponse.getStudentDto().getFirstName());
             customerDto.setContact(admasBillerResponse.getStudentDto().getContactNo());
-            paymentResponse.setCustomerDto(customerDto);
-            paymentResponse.setAdmasFeeMap(admasBillerResponse.getIdCardTypeMap());
+            dueBillResponse.setCustomerDto(customerDto);
+            dueBillResponse.setAdmasFeeMap(admasBillerResponse.getIdCardTypeMap());
         } catch (Exception e){
             log.error("Exception: {}", e.getMessage(), e);
         }
-        return paymentResponse;
+        return dueBillResponse;
     }
 
     private String getResponseString(CloseableHttpResponse response) throws IOException {
