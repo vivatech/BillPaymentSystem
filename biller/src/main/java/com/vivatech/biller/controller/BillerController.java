@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @Slf4j
@@ -27,5 +29,10 @@ public class BillerController {
         newBiller.setBillerCategory(biller.getBillerCategory());
         billerRepository.save(biller);
         return Response.builder().result(String.valueOf(PaymentEnum.ResponseStatus.SUCCESS)).message("Biller successfully created").build();
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public List<Biller> billerList(){
+        return billerRepository.findAll();
     }
 }

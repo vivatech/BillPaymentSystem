@@ -64,6 +64,10 @@ public class AdmasBiller implements BillerInterface{
             httpPost.setEntity(new StringEntity(registrationNo));
             CloseableHttpResponse response = client.execute(httpPost);
 
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                String errorBody = getResponseString(response);
+                throw new PaymentAppException(errorBody);
+            }
 
             String resBody = getResponseString(response);
 
@@ -141,7 +145,7 @@ public class AdmasBiller implements BillerInterface{
     private BillerTransaction convertAdmasDtoToBillerTransactionDto(AdmasFeePaymentRequest request){
         BillerTransaction transaction = new BillerTransaction();
         BillerTransaction existingTransaction = transactionRepository.findByTransactionId(request.getPaymentDto().getOrderId());
-        if (existingTransaction != null && !existingTransaction.getStatus().equalsIgnoreCase(String.valueOf(PaymentEnum.ResponseStatus.FAILED))) throw new PaymentAppException("Bill already in progress");
+        if (existingTransaction != null && !existingTransaction.getStatus().equalsIgnoreCase(String.valueOf(PaymentEnum.ResponseStatus.FAILED))) throw new PaymentAppException("Bill already in progress or completed");
         transaction.setTransactionId(request.getPaymentDto().getOrderId());
         transaction.setBiller(billerRepository.findByBillerName(StringUtils.replace(String.valueOf(PaymentEnum.BillerName.ADMAS_UNIVERSITY), "_", " ")));
         transaction.setAmount(request.getPaymentDto().getBankReceiptAmount());
