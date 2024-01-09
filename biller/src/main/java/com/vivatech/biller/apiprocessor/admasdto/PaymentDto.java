@@ -13,4 +13,5 @@ public class PaymentDto {
     private String paymentMode;
     private String timeStamp;
     private StudentDto studentDto;
+    private  String receiptVoucher;
 }
